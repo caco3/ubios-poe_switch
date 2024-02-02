@@ -45,10 +45,10 @@ logging.basicConfig(level=loglevel, format='%(asctime)s - %(levelname)s - %(mess
 def logout():
     logging.info("Logging out via %s.", logout_endpoint)
     # UniFi OS versions before 3.2.7
-    logout = s.post(logout_endpoint, headers = {'x-csrf-token': login.headers['X-CSRF-Token']}, verify = False, timeout = 1)
+    logout = s.post(logout_endpoint, headers = {'x-csrf-token': login.headers['X-CSRF-Token']}, verify = False, timeout = 5)
     # Unifi OS versions from 3.2.7
-    # logout = s.post(logout_endpoint, headers = {'x-csrf-token': login.headers['X-Csrf-Token']}, verify = False, timeout = 1)
-    
+    # logout = s.post(logout_endpoint, headers = {'x-csrf-token': login.headers['X-Csrf-Token']}, verify = False, timeout = 5)
+
     if (logout.status_code == 200):
         logging.debug("Success.")
         sys.exit()
@@ -58,12 +58,12 @@ def logout():
 
 
 # Login and get auth token from Cookies plus X-CSRF-Token from header
-# 
+#
 # working call with cURL:  Login:
 # curl -X POST --data 'username=user&password=pass' -c cookie.txt https://udm/api/auth/login
 # Get status:
 # curl -X GET -b cookie.txt https://udm/proxy/network/api/s/default/stat/device/abcdef012
-# 
+#
 
 logging.info("Trying to login to %s with data %s", login_endpoint, str(login_data))
 
@@ -74,7 +74,7 @@ headers = {
     "Content-Type": "application/json; charset=utf-8"
 }
 
-login = s.post(login_endpoint, headers = headers,  json = login_data , verify = False, timeout = 1)
+login = s.post(login_endpoint, headers = headers,  json = login_data , verify = False, timeout = 5)
 
 if (login.status_code == 200):
     cookies = login.cookies
@@ -93,7 +93,7 @@ else:
 # Get current port_overrides config for device
 logging.info ("Read current settings from %s", get_device_settings_endpoint)
 
-r = s.get(get_device_settings_endpoint, headers = headers, verify = False, timeout = 1)
+r = s.get(get_device_settings_endpoint, headers = headers, verify = False, timeout = 5)
 
 if (r.status_code == 200):
     logging.debug("Success.")
@@ -140,7 +140,7 @@ headers = {
 #    "x-csrf-token": login.headers['X-Csrf-Token']
 #}
 
-update = s.put(set_device_settings_endpoint, headers = headers, data = json.dumps(new_port_overrides), verify = False, timeout = 1)
+update = s.put(set_device_settings_endpoint, headers = headers, data = json.dumps(new_port_overrides), verify = False, timeout = 5)
 
 if (update.status_code == 200):
     logging.debug("Success.")
