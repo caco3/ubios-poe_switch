@@ -33,10 +33,8 @@ class Poe_switch():
 
         if (logout.status_code == 200):
             logging.debug("Success.")
-            sys.exit()
         else:
             logging.debug("Failed with return code %s", logout)
-            sys.exit()
 
     def login(self):
         """Login and get auth token from Cookies plus X-CSRF-Token from header
@@ -71,7 +69,6 @@ class Poe_switch():
             self.csrf_token = login.headers.get('X-CSRF-Token', '')  # Retrieve the CSRF token
         else:
             logging.debug("Login failed with return code %s", login.status_code)
-            sys.exit()
 
     def set_port_state(self, mac, ports_array, desired_poe_state):
         """Get current port_overrides config for device"""
